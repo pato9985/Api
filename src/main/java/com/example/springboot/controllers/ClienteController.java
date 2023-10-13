@@ -24,7 +24,7 @@ public class ClienteController {
     @Autowired
     ClienteRepository clienteRepository;
 
-    @GetMapping("/Cliente")
+    @GetMapping("/cliente")
 	public ResponseEntity<List<ClienteModel>> getAllCliente(){
 		List<ClienteModel> ClienteList = clienteRepository.findAll();
 		if(!ClienteList.isEmpty()) {
@@ -37,7 +37,7 @@ public class ClienteController {
 	}
 
 
-	@GetMapping("/Cliente/{id}")
+	@GetMapping("/cliente/{id}")
 	public ResponseEntity<Object> getOneCliente(@PathVariable(value="id") UUID id){
 		Optional<ClienteModel> ClienteO = clienteRepository.findById(id);
 		if(ClienteO.isEmpty()) {
@@ -47,7 +47,7 @@ public class ClienteController {
 		return ResponseEntity.status(HttpStatus.OK).body(ClienteO.get());
 	}
 
-    @PostMapping("/Cliente")
+    @PostMapping("/cliente")
 	public ResponseEntity<Object> saveCliente(@RequestBody @Valid ClienteRecordDto ClienteRecordDto) {
 		var ClienteModel = new ClienteModel();
 		BeanUtils.copyProperties(ClienteRecordDto, ClienteModel);
@@ -55,7 +55,7 @@ public class ClienteController {
 	}
 
 
-	@DeleteMapping("/Cliente/{id}")
+	@DeleteMapping("/cliente/{id}")
 	public ResponseEntity<Object> deleteCliente(@PathVariable(value="id") UUID id) {
 		Optional<ClienteModel> ClienteO = clienteRepository.findById(id);
 		if(ClienteO.isEmpty()) {
@@ -65,7 +65,7 @@ public class ClienteController {
 		return ResponseEntity.status(HttpStatus.OK).body("Cliente deleted successfully.");
 	}
 	
-	@PutMapping("/Cliente/{id}")
+	@PutMapping("/cliente/{id}")
 	public ResponseEntity<Object> updateCliente(@PathVariable(value="id") UUID id,
 													  @RequestBody @Valid ClienteRecordDto ClienteRecordDto) {
 		Optional<ClienteModel> ClienteO = clienteRepository.findById(id);

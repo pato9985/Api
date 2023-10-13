@@ -21,11 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class PratoController {
 	
 	@Autowired
-	PratoRepository PratoRepository;
+	PratoRepository pratoRepository;
 	
-	@GetMapping("/Prato")
+	@GetMapping("/prato")
 	public ResponseEntity<List<PratoModel>> getAllPrato(){
-		List<PratoModel> PratoList = PratoRepository.findAll();
+		List<PratoModel> PratoList = pratoRepository.findAll();
 		if(!PratoList.isEmpty()) {
 			for(PratoModel Prato : PratoList) {
 				UUID id = Prato.getIdPrato();
@@ -36,9 +36,9 @@ public class PratoController {
 	}
 
 
-	@GetMapping("/Prato/{id}")
+	@GetMapping("/prato/{id}")
 	public ResponseEntity<Object> getOnePrato(@PathVariable(value="id") UUID id){
-		Optional<PratoModel> PratoO = PratoRepository.findById(id);
+		Optional<PratoModel> PratoO = pratoRepository.findById(id);
 		if(PratoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prato not found.");
 		}
@@ -46,33 +46,33 @@ public class PratoController {
 		return ResponseEntity.status(HttpStatus.OK).body(PratoO.get());
 	}
 	
-	@PostMapping("/Prato")
-	public ResponseEntity<PratoModel> savePrato(@RequestBody @Valid PratoRecordDto PratoRecordDto) {
+	@PostMapping("/prato")
+	public ResponseEntity<PratoModel> savePrato(@RequestBody @Valid PratoRecordDto pratoRecordDto) {
 		var PratoModel = new PratoModel();
-		BeanUtils.copyProperties(PratoRecordDto, PratoModel);
-		return ResponseEntity.status(HttpStatus.CREATED).body(PratoRepository.save(PratoModel));
+		BeanUtils.copyProperties(pratoRecordDto, PratoModel);
+		return ResponseEntity.status(HttpStatus.CREATED).body(pratoRepository.save(PratoModel));
 	}
 	
-	@DeleteMapping("/Prato/{id}")
+	@DeleteMapping("/prato/{id}")
 	public ResponseEntity<Object> deletePrato(@PathVariable(value="id") UUID id) {
-		Optional<PratoModel> PratoO = PratoRepository.findById(id);
+		Optional<PratoModel> PratoO = pratoRepository.findById(id);
 		if(PratoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prato not found.");
 		}
-		PratoRepository.delete(PratoO.get());
+		pratoRepository.delete(PratoO.get());
 		return ResponseEntity.status(HttpStatus.OK).body("Prato deleted successfully.");
 	}
 	
-	@PutMapping("/Prato/{id}")
+	@PutMapping("/prato/{id}")
 	public ResponseEntity<Object> updatePrato(@PathVariable(value="id") UUID id,
 													  @RequestBody @Valid PratoRecordDto PratoRecordDto) {
-		Optional<PratoModel> PratoO = PratoRepository.findById(id);
+		Optional<PratoModel> PratoO = pratoRepository.findById(id);
 		if(PratoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Prato not found.");
 		}
 		var PratoModel = PratoO.get();
 		BeanUtils.copyProperties(PratoRecordDto, PratoModel);
-		return ResponseEntity.status(HttpStatus.OK).body(PratoRepository.save(PratoModel));
+		return ResponseEntity.status(HttpStatus.OK).body(pratoRepository.save(PratoModel));
 	}
 
 

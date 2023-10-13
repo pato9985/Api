@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
-public record PedidoRecordDto (@NotBlank UUID idPedido, @NotBlank long idCliente, @NotNull float data, @NotNull String status, @NotNull BigDecimal value, @NotNull String pagamento) {
+public record PedidoRecordDto 
+(@NotBlank UUID idPedido, @NotBlank long idCliente, @NotNull float data, @NotNull String status,
+@NotNull BigDecimal value, @NotNull String pagamento) {
 }
 

@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record PratoRecordDto(@NotBlank String prato, @NotBlank String descrição, @NotNull BigDecimal value) {
+public record PratoRecordDto
+(@NotBlank String prato, @NotBlank String descrição, @NotNull BigDecimal value) {
 }

@@ -1,36 +1,49 @@
 package com.example.springboot.controllers;
 
+import com.example.springboot.dtos.PedidoRecordDto;
+import com.example.springboot.models.PedidoModel;
+import com.example.springboot.repositories.PedidoRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.springboot.repositories.PedidoRepository;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class PedidoController {
     
     @Autowired
-    PedidoRepository PedidoRepository;
+    PedidoRepository pedidoRepository;
 
-    @GetMapping("/Pedido")
+
+	@GetMapping("/pedido/teste")
+	public String index() {
+		return "hello world";
+	}
+
+    @GetMapping("/pedido")
     public ResponseEntity<List<PedidoModel>> getAllPedido(){
 		List<PedidoModel> pedidoList = pedidoRepository.findAll();
 		if(!pedidoList.isEmpty()) {
-			for(pedidoModel pedido : pedidoList) {
+			for(PedidoModel pedido : pedidoList) {
 				UUID id = pedido.getIdPedido();
-				Pedido.add(linkTo(methodOn(PedidoController.class).getOnePedido(id)).withSelfRel());
+				pedido.add(linkTo(methodOn(PedidoController.class).getOnePedido(id)).withSelfRel());
 			}
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(PedidoList);
+		return ResponseEntity.status(HttpStatus.OK).body(pedidoList);
 	}
 
-    @GetMapping("/Pedido/{id}")
+    @GetMapping("/pedido/{id}")
 	public ResponseEntity<Object> getOnePedido(@PathVariable(value="id") UUID id){
-		Optional<PedidoModel> PedidoO = PedidoRepository.findById(id);
+		Optional<PedidoModel> PedidoO = pedidoRepository.findById(id);
 		if(PedidoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido not found.");
 		}
@@ -38,33 +51,33 @@ public class PedidoController {
 		return ResponseEntity.status(HttpStatus.OK).body(PedidoO.get());
 	}
 
-    @PostMapping("/Pedido")
+    @PostMapping("/pedido")
 	public ResponseEntity<PedidoModel> savePedido(@RequestBody @Valid PedidoRecordDto PedidoRecordDto) {
 		var PedidoModel = new PedidoModel();
 		BeanUtils.copyProperties(PedidoRecordDto, PedidoModel);
-		return ResponseEntity.status(HttpStatus.CREATED).body(PedidoRepository.save(PedidoModel));
+		return ResponseEntity.status(HttpStatus.CREATED).body(pedidoRepository.save(PedidoModel));
 	}
 	
-	@DeleteMapping("/Pedido/{id}")
+	@DeleteMapping("/pedido/{id}")
 	public ResponseEntity<Object> deletePedido(@PathVariable(value="id") UUID id) {
-		Optional<PedidoModel> PedidoO = PedidoRepository.findById(id);
+		Optional<PedidoModel> PedidoO = pedidoRepository.findById(id);
 		if(PedidoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido not found.");
 		}
-		PedidoRepository.delete(PedidoO.get());
+		pedidoRepository.delete(PedidoO.get());
 		return ResponseEntity.status(HttpStatus.OK).body("Pedido deleted successfully.");
 	}
 
-    @PutMapping("/Pedido/{id}")
+    @PutMapping("/pedido/{id}")
 	public ResponseEntity<Object> updatePedido(@PathVariable(value="id") UUID id,
 													  @RequestBody @Valid PedidoRecordDto PedidoRecordDto) {
-		Optional<PedidoModel> PedidoO = PedidoRepository.findById(id);
+		Optional<PedidoModel> PedidoO = pedidoRepository.findById(id);
 		if(PedidoO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido not found.");
 		}
-		var PedidoModel = PedidoO.get();
+		var PedidoModel = PedidoO.get(); 
 		BeanUtils.copyProperties(PedidoRecordDto, PedidoModel);
-		return ResponseEntity.status(HttpStatus.OK).body(PedidoRepository.save(PedidoModel));
+		return ResponseEntity.status(HttpStatus.OK).body(pedidoRepository.save(PedidoModel));
 	}
 
 }
